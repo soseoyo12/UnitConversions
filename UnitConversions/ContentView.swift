@@ -18,8 +18,32 @@ struct ContentView: View {
     @State var selectedUnitFrom = "Celsius"
     @State var selectedUnitTo = "Fahrenheit"
     
-    @State var inputValue = 20
-    @State var outputValue = 100
+    @State var inputValue = ""
+    var outputValue: Double? {
+        guard let inputValue = Double(inputValue) else { return nil }
+        var ReferenceValue = 0.0
+        
+        
+        if selectedUnitFrom == "Celsius" {
+            ReferenceValue = Double(inputValue)
+        } else if selectedUnitFrom == "Fahrenheit" {
+            ReferenceValue = (Double(inputValue) - 32) / 1.8
+        } else {
+            ReferenceValue = Double(inputValue) - 273.15
+        }
+        
+        if selectedUnitTo == "Celsius" {
+            return ReferenceValue
+        } else if selectedUnitTo == "Fahrenheit" {
+            return (ReferenceValue * 1.8) + 32
+        } else {
+            return ReferenceValue + 273.15
+        }
+        
+    }
+    
+    
+    
     
     
     var body: some View {
@@ -43,10 +67,18 @@ struct ContentView: View {
                     .pickerStyle(.segmented)
                 }
                 
+                
                 Section {
-                    TextField("Input", value: $inputValue, format: .currency(code: "USD"))
+                    TextField("Input", text: $inputValue)
                 }
                 
+                Section {
+                    if let result = outputValue {
+                        Text("\(result)")
+                    } else {
+                        Text("Output")
+                    }
+                }
                 
                 
                 
